@@ -49,7 +49,7 @@
       repo: https://github.com/amolshete/reactjs-demo.git
       dest: /root/reactjs-demo
       clone: yes
-      update: no
+      update: yes
 
    - name: build the npm package
      command:
