@@ -1,0 +1,64 @@
+- hosts: all
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  tasks:
+   - name: install apache on remote machine-ubuntu
+     apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes
+     when: ansible_distribution=="Ubuntu"
+     loop:
+      - apache2
+      - npm
+
+   - name: install apache on remote machine
+     yum:
+      name: "{{item}}"
+      state: present
+      update_cache: yes
+     when: ansible_distribution=="RedHat"
+     loop:
+      - httpd
+      - npm
+
+   - name: enable the service
+     service:
+      enabled: true
+      name: apache2
+      state: started
+     when: ansible_distribution=="Ubuntu"
+
+   - name: enable the service
+     service:
+      enabled: true
+      name: httpd
+      state: started
+     when: ansible_distribution=="RedHat"
+
+   - name: copy the index.html to remote webserver
+     copy: 
+      src: /etc/ansible/files/index.html
+      dest: /var/www/html/index.html
+
+
+   - name: clone a github repository for ansible
+     git:
+      repo: https://github.com/amolshete/reactjs-demo.git
+      dest: /root/reactjs-demo
+      clone: yes
+      update: no
+
+   - name: build the npm package
+     command:
+      cmd: "{{item}}"
+      chdir: /root/reactjs-demo
+     loop:
+      - npm install
+      - npm run build
+      
+      
+
+
