@@ -49,7 +49,7 @@
       repo: https://github.com/amolshete/reactjs-demo.git
       dest: /root/reactjs-demo
       clone: yes
-      update: yes
+      update: no
 
    - name: build the npm package
      command:
@@ -58,7 +58,8 @@
      loop:
       - npm install
       - npm run build
-      
-      
 
-
+   - name: copy the index.html to remote webservers
+     copy:
+      src: /root/reactjs-demo/build/index.html
+      dest: /var/www/html/index.html
