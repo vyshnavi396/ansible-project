@@ -1,0 +1,10 @@
+FROM node:16.13.1 as react-build
+WORKDIR /app
+#COPY package*.json /app
+COPY . /app
+RUN npm install
+RUN npm run build
+
+FROM nginx:latest
+EXPOSE 8080 
+COPY --from=react-build /app/build /usr/share/nginx/html
